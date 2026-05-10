@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiero Salirme — OSIPTEL</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:#f4f6f9;color:#222;min-height:100vh;padding:1.5rem}
+.app{max-width:760px;margin:0 auto}
+.header{background:#1a3a5c;border-radius:10px;padding:1.25rem 1.5rem;margin-bottom:1.5rem;display:flex;align-items:center;gap:12px}
+.header h1{font-size:17px;font-weight:600;color:#fff}
+.header p{font-size:12px;color:#9bb8d4;margin-top:2px}
+.search-bar{display:flex;gap:8px;margin-bottom:1.5rem}
+.search-bar input{flex:1;padding:10px 14px;border:1px solid #ccc;border-radius:8px;font-size:14px}
+.search-bar button{padding:10px 22px;background:#1a3a5c;color:#fff;border:none;border-radius:8px;font-size:14px;cursor:pointer;display:flex;align-items:center;gap:6px}
+.search-bar button:hover{background:#2e6da4}
+.search-bar button:disabled{opacity:0.5;cursor:not-allowed}
+.titular{background:#eef2f7;border-radius:10px;border:1px solid #d0daea;padding:1rem 1.25rem;margin-bottom:1.25rem}
+.titular h2{font-size:11px;font-weight:600;color:#666;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:10px}
+.tgrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.tfield label{font-size:11px;color:#888;display:block;margin-bottom:1px}
+.tfield span{font-size:13px;color:#1a3a5c;font-weight:600}
+.section{background:#fff;border:1px solid #dde3ec;border-radius:10px;padding:1rem 1.25rem;margin-bottom:1rem}
+.sec-head{display:flex;align-items:center;gap:8px;margin-bottom:1rem;padding-bottom:8px;border-bottom:1px solid #eee}
+.sec-head h3{font-size:13px;font-weight:600;color:#1a3a5c}
+.badge{font-size:10px;padding:2px 8px;border-radius:99px;margin-left:auto;font-weight:600}
+.b1{background:#dbeafe;color:#1e40af}
+.b2{background:#dcfce7;color:#166534}
+.b3{background:#fef3c7;color:#92400e}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.full{grid-column:1/-1}
+.field label{font-size:12px;color:#555;display:block;margin-bottom:4px;font-weight:500}
+.field select,.field input,.field textarea{width:100%;padding:8px 10px;border:1px solid #ccc;border-radius:7px;font-size:13px;background:#fff;color:#222}
+.field select:focus,.field input:focus,.field textarea:focus{outline:none;border-color:#2e6da4}
+.field textarea{resize:vertical;min-height:70px}
+.field input:disabled,.field select:disabled{opacity:0.4;background:#f0f0f0;cursor:not-allowed}
+.blocked{opacity:0.4;pointer-events:none}
+.blocked-note{font-size:11px;color:#888;font-style:italic;margin-bottom:8px}
+.actions{display:flex;gap:8px;justify-content:flex-end;margin-top:1rem}
+.btn-save{padding:10px 24px;background:#1a3a5c;color:#fff;border:none;border-radius:8px;font-size:14px;cursor:pointer}
+.btn-save:hover{background:#2e6da4}
+.btn-save:disabled{opacity:0.5;cursor:not-allowed}
+.btn-clear{padding:10px 20px;background:#f0f0f0;color:#555;border:1px solid #ccc;border-radius:8px;font-size:14px;cursor:pointer}
+.btn-clear:hover{background:#e0e0e0}
+.status{padding:10px 14px;border-radius:8px;font-size:13px;margin-top:1rem;display:none}
+.s-ok{background:#dcfce7;color:#166534;display:block}
+.s-err{background:#fee2e2;color:#991b1b;display:block}
+.s-load{background:#dbeafe;color:#1e40af;display:block}
+.hidden{display:none}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <div>
+      <h1>Quiero Salirme — OSIPTEL</h1>
+      <p>Registro de atenciones del programa</p>
+    </div>
+  </div>
+
+  <div class="search-bar">
+    <input type="text" id="inputId" placeholder="Ingrese ID del caso..." onkeydown="if(event.key==='Enter')buscar()" />
+    <button id="btnBuscar" onclick="buscar()">&#128269; Buscar</button>
+  </div>
+
+  <div id="formArea" class="hidden">
+    <div class="titular">
+      <h2>Datos del titular</h2>
+      <div class="tgrid">
+        <div class="tfield"><label>Nombre completo</label><span id="dNombre">—</span></div>
+        <div class="tfield"><label>Documento</label><span id="dDoc">—</span></div>
+        <div class="tfield"><label>Empresa operadora</label><span id="dEmpresa">—</span></div>
+        <div class="tfield"><label>Servicio de baja</label><span id="dServicio">—</span></div>
+        <div class="tfield"><label>Email</label><span id="dEmail">—</span></div>
+        <div class="tfield"><label>Celular</label><span id="dCelular">—</span></div>
+        <div class="tfield"><label>Canal de atención</label><span id="dCanal">—</span></div>
+        <div class="tfield"><label>Fecha de registro</label><span id="dFecha">—</span></div>
+        <div class="tfield"><label>Lugar</label><span id="dLugar">—</span></div>
+        <div class="tfield"><label>N° Servicio</label><span id="dNServ2">—</span></div>
+        <div class="tfield"><label>Fecha solicitud baja</label><span id="dFechaBaja2">—</span></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="sec-head">
+        <h3>Acción realizada</h3>
+        <span class="badge b1">Bloque T – Y</span>
+      </div>
+      <div class="fgrid">
+        <div class="field"><label>Responsable atención</label><input type="text" id="fResp" placeholder="Nombre del orientador" /></div>
+        <div class="field"><label>Intentos de llamada</label><input type="number" id="fIntentos" min="1" placeholder="Ej. 2" /></div>
+        <div class="field"><label>Contestó</label>
+          <select id="fContesto">
+            <option value="">— seleccione —</option>
+            <option>SI</option>
+            <option>NO - SE ENVIÓ CORREO</option>
+          </select>
+        </div>
+        <div class="field"><label>Acción realizada</label>
+          <select id="fAccion" onchange="aplicarLogica()">
+            <option value="">— seleccione —</option>
+            <option>ORIENTACIÓN</option>
+            <option>SE GESTIONA EN CHECA TU CASO - LLAMADA</option>
+            <option>SE GESTIONA POR CORREO - LLAMADA</option>
+            <option>NO CUENTA CON INFORMACIÓN</option>
+            <option>CASO YA SOLUCIONADO</option>
+          </select>
+        </div>
+        <div class="field"><label>N° registro ATUS</label><input type="text" id="fAtus" placeholder="Solo si acción = ORIENTACIÓN" disabled /></div>
+        <div class="field"><label>Tipo de problema</label>
+          <select id="fTipo">
+            <option value="">— seleccione —</option>
+            <option>BAJA NO RECIBIDA</option>
+            <option>BAJA NO EJECUTADA</option>
+            <option>BAJA NO SOLICITADA</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="section" id="secGestion">
+      <div class="sec-head">
+        <h3>Gestión</h3>
+        <span class="badge b2">Bloque Z – AH</span>
+      </div>
+      <p id="noteG" class="blocked-note hidden">No aplica para esta acción.</p>
+      <div class="fgrid" id="gFields">
+        <div class="field"><label>N° servicio afectado</label><input type="text" id="fNServ" /></div>
+        <div class="field"><label>Empresa operadora usuario</label><input type="text" id="fEmp2" /></div>
+        <div class="field full"><label>Servicios contratados</label>
+          <select id="fServicios">
+            <option value="">— seleccione —</option>
+            <option>Internet fijo</option>
+            <option>Televisión de paga</option>
+            <option>Teléfono fijo</option>
+            <option>Servicio móvil</option>
+            <option>Internet fijo y televisión de paga</option>
+            <option>Internet fijo y teléfono fijo</option>
+            <option>Televisión de paga y teléfono fijo</option>
+            <option>Internet fijo, televisión de paga y teléfono fijo</option>
+            <option>Internet fijo, televisión de paga, teléfono fijo y servicio móvil</option>
+          </select>
+        </div>
+        <div class="field full"><label>Dirección (recibo / instalación)</label><input type="text" id="fDir" /></div>
+        <div class="field"><label>Fecha baja usuario</label><input type="date" id="fFechaBaja" /></div>
+        <div class="field"><label>Canal solicitud baja</label>
+          <select id="fCanalBaja">
+            <option value="">— seleccione —</option>
+            <option>Telefónico</option>
+            <option>Whatsapp</option>
+            <option>App de la empresa</option>
+            <option>Centro presencial</option>
+            <option>Página Web</option>
+          </select>
+        </div>
+        <div class="field"><label>Código de baja / constancia</label><input type="text" id="fCodBaja" /></div>
+        <div class="field"><label>Nombre asesor (opcional)</label><input type="text" id="fAsesor" /></div>
+        <div class="field full"><label>Código Checa Tu Caso</label><input type="text" id="fCheca" /></div>
+      </div>
+    </div>
+
+    <div class="section" id="secSeguimiento">
+      <div class="sec-head">
+        <h3>Seguimiento</h3>
+        <span class="badge b3">Bloque AI – AO</span>
+      </div>
+      <p id="noteS" class="blocked-note hidden">No aplica para esta acción.</p>
+      <div class="fgrid" id="sFields">
+        <div class="field"><label>Fecha inicio gestión</label><input type="date" id="fFechaGest" /></div>
+        <div class="field"><label>Estado gestión / Checa Tu Caso</label>
+          <select id="fEstado">
+            <option value="">— seleccione —</option>
+            <option>Anulado</option>
+            <option>Caso con solución programada</option>
+            <option>Caso Improcedente</option>
+            <option>Caso Rechazado por Duplicado</option>
+            <option>Caso Rechazado por estar en Reclamo</option>
+            <option>Caso solucionado</option>
+            <option>Plazo Vencido</option>
+            <option>Reclamo con Codigo</option>
+            <option>Reclamo Notificado</option>
+          </select>
+        </div>
+        <div class="field"><label>Validación SICBAM</label>
+          <select id="fSicbam">
+            <option value="">— seleccione —</option>
+            <option>Validado</option>
+            <option>No aplica</option>
+          </select>
+        </div>
+        <div class="field"><label>Comunicación con usuario</label>
+          <select id="fComunica">
+            <option value="">— seleccione —</option>
+            <option>SI</option>
+            <option>NO CONTESTO</option>
+          </select>
+        </div>
+        <div class="field full"><label>Corroboración</label><input type="text" id="fCorrob" /></div>
+        <div class="field full"><label>Observaciones / seguimiento</label><textarea id="fObs"></textarea></div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn-clear" onclick="limpiar()">Limpiar</button>
+      <button class="btn-save" id="btnGuardar" onclick="guardar()">&#128190; Guardar</button>
+    </div>
+  </div>
+  <div id="status" class="status"></div>
+</div>
+
+<script>
+const API = 'https://script.google.com/macros/s/AKfycbwF1JXEjBVw6vtUms3ucTa_LxOsAtP1VJq7jIjIwneJBB6u_ffTn0dfFgbtVpWsvv6p/exec';
+let casoActual = null;
+
+function setStatus(msg, tipo) {
+  const el = document.getElementById('status');
+  el.className = 'status s-' + tipo;
+  el.textContent = msg;
+}
+
+function fmtFecha(val) {
+  if (!val) return '—';
+  const d = new Date(val);
+  if (isNaN(d)) return val;
+  return d.toLocaleDateString('es-PE', {day:'2-digit', month:'2-digit', year:'numeric'});
+}
+
+async function buscar() {
+  const id = document.getElementById('inputId').value.trim();
+  if (!id) { setStatus('Ingrese un ID antes de buscar.', 'err'); return; }
+  const btn = document.getElementById('btnBuscar');
+  btn.disabled = true;
+  setStatus('Buscando caso ' + id + '...', 'load');
+  try {
+    const res = await fetch(API + '?action=buscar&id=' + encodeURIComponent(id));
+    const json = await res.json();
+    if (!json.ok) { setStatus('ID ' + id + ' no encontrado en la base.', 'err'); btn.disabled = false; return; }
+    const d = json.data;
+    casoActual = d;
+    const empresa = (d['EMPRESAOPERADORA'] || '').toUpperCase().includes('OTRO')
+      ? (d['OTRAEMPRESAOPERADORA'] || d['EMPRESAOPERADORA'])
+      : d['EMPRESAOPERADORA'];
+    document.getElementById('dNombre').textContent =
+      [d['NOMBRETITULAR'], d['APELLIDOPATERNO'], d['APELLIDOMATERNO']].filter(Boolean).join(' ') || '—';
+    document.getElementById('dDoc').textContent =
+      [d['TIPODOCUMENTO'], d['NUMERODOCUMENTO']].filter(Boolean).join(' ') || '—';
+    document.getElementById('dEmpresa').textContent = empresa || '—';
+    document.getElementById('dServicio').textContent = d['SERVICIOBAJA'] || '—';
+    document.getElementById('dCanal').textContent = d['CANALATENCIONTRAMITE'] || '—';
+    document.getElementById('dFecha').textContent = fmtFecha(d['FECHAHORAREGISTRO']);
+    document.getElementById('dEmail').textContent = d['EMAIL'] || '—';
+    document.getElementById('dCelular').textContent = d['CELULAR'] || '—';
+    document.getElementById('dLugar').textContent = d['LUGAR'] || '—';
+    document.getElementById('dNServ2').textContent = d['N° SERVICIO'] || '—';
+    document.getElementById('dFechaBaja2').textContent = fmtFecha(d['FECHA SOLICITUD DE BAJA']);
+    setVal('fResp',      d['RESPONSABLE ATENCIÓN']);
+    setVal('fIntentos',  d['INTENTO DE LLAMADA']);
+    setVal('fContesto',  d['CONTESTÓ']);
+    setVal('fAccion',    d['ACCIÓN REALIZADA']);
+    setVal('fAtus',      d['N° REGISTRO\n ATUS']);
+    setVal('fTipo',      d['TIPO DE PROBLEMA']);
+    setVal('fNServ',     d['1. Número de servicio afectado']);
+    setVal('fEmp2',      d['2. Empresa operadora'] || empresa);
+    setVal('fServicios', d['3. Servicios contratados']);
+    setVal('fDir',       d['4. Dirección que figura en recibo o de instalación.']);
+    setVal('fFechaBaja', d['5. Fecha de la baja / Fecha en la que solicito la baja']);
+    setVal('fCanalBaja', d['6. Canal mediante el cual solicitó o intentó la baja']);
+    setVal('fCodBaja',   d['7. Código de baja o constancia (de contar con ella).']);
+    setVal('fAsesor',    d['Opcional: nombre de asesor']);
+    setVal('fCheca',     d['CÓDIGO DE CHECA TU CASO']);
+    setVal('fFechaGest', d['FECHA DE INICIO DE GESTION']);
+    setVal('fEstado',    d['ESTADO DE GESTIÓN/CHECA TU CASO']);
+    setVal('fSicbam',    d['VALIDACIÓN EN SICBAM - CHECA TUS LINEAS']);
+    setVal('fComunica',  d['HUBO COMUNICACIÓN CON USUARIO']);
+    setVal('fCorrob',    d['CORROBORACIÓN']);
+    setVal('fObs',       d['OBSERVACIONES']);
+    document.getElementById('formArea').classList.remove('hidden');
+    aplicarLogica();
+    setStatus('Caso ID ' + id + ' cargado correctamente.', 'ok');
+  } catch(e) {
+    setStatus('Error de conexión: ' + e.message, 'err');
+  }
+  btn.disabled = false;
+}
+
+function setVal(id, val) {
+  const el = document.getElementById(id);
+  if (!el || val === undefined || val === null || val === '') return;
+  el.value = val;
+}
+
+function aplicarLogica() {
+  const accion = document.getElementById('fAccion').value;
+  const bloquear = accion === 'ORIENTACIÓN' || accion === 'CASO YA SOLUCIONADO';
+  ['secGestion','secSeguimiento'].forEach(id => {
+    document.getElementById(id).classList.toggle('blocked', bloquear);
+  });
+  document.getElementById('noteG').classList.toggle('hidden', !bloquear);
+  document.getElementById('noteS').classList.toggle('hidden', !bloquear);
+  document.getElementById('gFields').style.display = bloquear ? 'none' : 'grid';
+  document.getElementById('sFields').style.display = bloquear ? 'none' : 'grid';
+  const atus = document.getElementById('fAtus');
+  atus.disabled = accion !== 'ORIENTACIÓN';
+  if (accion !== 'ORIENTACIÓN') atus.value = '';
+}
+
+async function guardar() {
+  const resp = document.getElementById('fResp').value.trim();
+  const accion = document.getElementById('fAccion').value;
+  if (!resp || !accion) { setStatus('Complete Responsable de atención y Acción realizada antes de guardar.', 'err'); return; }
+  if (!casoActual) { setStatus('Primero busque un caso.', 'err'); return; }
+  const btn = document.getElementById('btnGuardar');
+  btn.disabled = true;
+  setStatus('Guardando...', 'load');
+  const campos = {
+    'RESPONSABLE ATENCIÓN':                                    document.getElementById('fResp').value,
+    'INTENTO DE LLAMADA':                                      document.getElementById('fIntentos').value,
+    'CONTESTÓ':                                                document.getElementById('fContesto').value,
+    'ACCIÓN REALIZADA':                                        accion,
+    'N° REGISTRO\n ATUS':                                      document.getElementById('fAtus').value,
+    'TIPO DE PROBLEMA':                                        document.getElementById('fTipo').value,
+    '1. Número de servicio afectado':                          document.getElementById('fNServ').value,
+    '2. Empresa operadora':                                    document.getElementById('fEmp2').value,
+    '3. Servicios contratados':                                document.getElementById('fServicios').value,
+    '4. Dirección que figura en recibo o de instalación.':     document.getElementById('fDir').value,
+    '5. Fecha de la baja / Fecha en la que solicito la baja':  document.getElementById('fFechaBaja').value,
+    '6. Canal mediante el cual solicitó o intentó la baja':    document.getElementById('fCanalBaja').value,
+    '7. Código de baja o constancia (de contar con ella).':    document.getElementById('fCodBaja').value,
+    'Opcional: nombre de asesor':                              document.getElementById('fAsesor').value,
+    'CÓDIGO DE CHECA TU CASO':                                 document.getElementById('fCheca').value,
+    'FECHA DE INICIO DE GESTION':                              document.getElementById('fFechaGest').value,
+    'ESTADO DE GESTIÓN/CHECA TU CASO':                         document.getElementById('fEstado').value,
+    'VALIDACIÓN EN SICBAM - CHECA TUS LINEAS':                 document.getElementById('fSicbam').value,
+    'HUBO COMUNICACIÓN CON USUARIO':                           document.getElementById('fComunica').value,
+    'CORROBORACIÓN':                                           document.getElementById('fCorrob').value,
+    'OBSERVACIONES':                                           document.getElementById('fObs').value,
+  };
+  try {
+    const res = await fetch(API, {
+      method: 'POST',
+      body: JSON.stringify({ action: 'guardar', id: casoActual['ID'], campos })
+    });
+    const json = await res.json();
+    if (json.ok) {
+      setStatus('Guardado correctamente. [' + new Date().toLocaleString('es-PE') + ']', 'ok');
+    } else {
+      setStatus('Error al guardar: ' + (json.msg || 'intente de nuevo.'), 'err');
+    }
+  } catch(e) {
+    setStatus('Error de conexión al guardar: ' + e.message, 'err');
+  }
+  btn.disabled = false;
+}
+
+function limpiar() {
+  casoActual = null;
+  document.getElementById('inputId').value = '';
+  document.getElementById('formArea').classList.add('hidden');
+  document.getElementById('status').className = 'status';
+  document.getElementById('status').textContent = '';
+  ['fResp','fIntentos','fNServ','fEmp2','fCodBaja','fAsesor','fCheca','fCorrob','fObs','fDir'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  ['fContesto','fAccion','fTipo','fServicios','fCanalBaja','fEstado','fSicbam','fComunica'].forEach(id => {
+    document.getElementById(id).selectedIndex = 0;
+  });
+  ['fFechaBaja','fFechaGest'].forEach(id => document.getElementById(id).value = '');
+}
+</script>
+</body>
+</html>
