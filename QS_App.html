@@ -8,21 +8,21 @@
 *{box-sizing:border-box;margin:0;padding:0}
 .login-overlay{position:fixed;inset:0;background:#f4f6f9;display:flex;align-items:center;justify-content:center;z-index:999}
 .login-box{background:#fff;border:1px solid #dde3ec;border-radius:12px;padding:2rem;width:100%;max-width:380px;text-align:center}
-.login-logo{background:#1a3a5c;border-radius:10px;padding:1rem 1.5rem;margin-bottom:1.5rem}
+.login-logo{background:#003087;border-radius:10px;padding:1rem 1.5rem;margin-bottom:1.5rem}
 .login-logo h1{font-size:16px;font-weight:600;color:#fff}
 .login-logo p{font-size:11px;color:#9bb8d4;margin-top:2px}
-.login-btn{width:100%;padding:11px;background:#1a3a5c;color:#fff;border:none;border-radius:8px;font-size:14px;cursor:pointer;margin-top:1rem}
-.login-btn:hover{background:#2e6da4}
+.login-btn{width:100%;padding:11px;background:#003087;color:#fff;border:none;border-radius:8px;font-size:14px;cursor:pointer;margin-top:1rem}
+.login-btn:hover{background:#00b4d8}
 .login-user{font-size:12px;color:#888;margin-top:8px}
 body{font-family:Arial,sans-serif;background:#f4f6f9;color:#222;min-height:100vh;padding:1.5rem 1.5rem 100px}
 .app{max-width:760px;margin:0 auto}
-.header{background:#1a3a5c;border-radius:10px;padding:1.25rem 1.5rem;margin-bottom:1.5rem}
+.header{background:#003087;border-radius:10px;padding:1.25rem 1.5rem}
 .header h1{font-size:17px;font-weight:600;color:#fff}
 .header p{font-size:12px;color:#9bb8d4;margin-top:2px}
 .search-bar{display:flex;gap:8px;margin-bottom:1.5rem}
 .search-bar input{flex:1;padding:10px 14px;border:1px solid #ccc;border-radius:8px;font-size:14px}
-.search-bar button{padding:10px 22px;background:#1a3a5c;color:#fff;border:none;border-radius:8px;font-size:14px;cursor:pointer}
-.search-bar button:hover{background:#2e6da4}
+.search-bar button{padding:10px 22px;background:#003087;color:#fff;border:none;border-radius:8px;font-size:14px;cursor:pointer}
+.search-bar button:hover{background:#00b4d8}
 .search-bar button:disabled{opacity:0.5;cursor:not-allowed}
 @keyframes spin{to{transform:rotate(360deg)}}
 .spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,0.4);border-top-color:#fff;border-radius:50%;animation:spin 0.7s linear infinite;vertical-align:middle;margin-right:6px}
@@ -59,8 +59,8 @@ body{font-family:Arial,sans-serif;background:#f4f6f9;color:#222;min-height:100vh
 .sticky-bar{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #dde3ec;padding:12px 24px;display:flex;align-items:center;justify-content:space-between;gap:12px;z-index:100;box-shadow:0 -2px 8px rgba(0,0,0,0.06)}
 .sticky-bar .case-label{font-size:12px;color:#888;font-style:italic;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:300px}
 .sticky-bar .btns{display:flex;gap:8px;flex-shrink:0}
-.btn-save{padding:9px 22px;background:#1a3a5c;color:#fff;border:none;border-radius:8px;font-size:14px;cursor:pointer}
-.btn-save:hover{background:#2e6da4}
+.btn-save{padding:9px 22px;background:#003087;color:#fff;border:none;border-radius:8px;font-size:14px;cursor:pointer}
+.btn-save:hover{background:#00b4d8}
 .btn-save:disabled{opacity:0.5;cursor:not-allowed}
 .btn-clear{padding:9px 18px;background:#f0f0f0;color:#555;border:1px solid #ccc;border-radius:8px;font-size:14px;cursor:pointer}
 .btn-clear:hover{background:#e0e0e0}
@@ -104,26 +104,39 @@ body{font-family:Arial,sans-serif;background:#f4f6f9;color:#222;min-height:100vh
   body{padding:1rem 1rem 100px}
 }
 </style>
-<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 </head>
 <body>
 <!-- Login overlay -->
 <div class="login-overlay" id="loginOverlay">
   <div class="login-box">
     <div class="login-logo">
-      <h1>Quiero Salirme — OSIPTEL</h1>
-      <p>Registro de atenciones del programa</p>
+      <div style="font-size:14px;font-weight:700;color:#00b4d8;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:4px">OSIPTEL</div>
+      <div style="font-size:16px;font-weight:700;color:#fff">Quiero Salirme</div>
+      <div style="font-size:11px;color:rgba(255,255,255,0.6);margin-top:2px">Registro de atenciones del programa</div>
     </div>
-    <p style="font-size:13px;color:#555;margin-bottom:1.5rem">Inicia sesión con tu correo institucional para continuar</p>
-    <button class="login-btn" id="loginBtn" onclick="netlifyIdentity.open('login')">Iniciar sesión</button>
-    <p class="login-user" id="loginUser"></p>
+    <p style="font-size:13px;color:#555;margin-bottom:1.5rem">Ingresa la contraseña para continuar</p>
+    <div style="position:relative;margin-bottom:10px">
+      <input type="password" id="passInput" placeholder="Contraseña" onkeydown="if(event.key==='Enter')verificarPass()" style="width:100%;padding:10px 40px 10px 14px;border:1px solid #ccc;border-radius:8px;font-size:14px" />
+      <span onclick="var i=document.getElementById('passInput');i.type=i.type==='password'?'text':'password'" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);cursor:pointer;font-size:18px;color:#888;user-select:none">&#128065;</span>
+    </div>
+    <p id="passError" style="font-size:12px;color:#dc2626;margin-bottom:8px;display:none">Contraseña incorrecta. Intenta de nuevo.</p>
+    <button class="login-btn" onclick="verificarPass()">Ingresar</button>
   </div>
 </div>
 
 <div class="app">
-  <div class="header">
-    <h1>Quiero Salirme — OSIPTEL</h1>
-    <p>Registro de atenciones del programa</p>
+  <div style="position:relative;margin-bottom:1.5rem">
+    <button onclick="cerrarSesion()" style="position:absolute;top:10px;right:10px;background:rgba(255,255,255,0.15);color:#fff;border:1px solid rgba(255,255,255,0.3);border-radius:7px;padding:6px 12px;font-size:12px;cursor:pointer;display:flex;align-items:center;gap:6px;z-index:10">&#x2192; Cerrar sesión</button>
+    <div class="header">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div style="width:4px;height:40px;background:#00b4d8;border-radius:2px;flex-shrink:0"></div>
+        <div>
+          <div style="font-size:14px;font-weight:700;color:#00b4d8;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:2px">OSIPTEL</div>
+          <div style="font-size:17px;font-weight:700;color:#fff">Quiero Salirme</div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.6);margin-top:1px">Registro de atenciones del programa</div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div class="search-bar">
@@ -187,7 +200,16 @@ body{font-family:Arial,sans-serif;background:#f4f6f9;color:#222;min-height:100vh
         <span class="badge b1">Bloque T – Y</span>
       </div>
       <div class="fgrid">
-        <div class="field"><label>Responsable atención <span style="color:#dc2626">*</span></label><input type="text" id="fResp" placeholder="Nombre del orientador" style="border-color:#2e6da4;border-width:2px" /></div>
+        <div class="field"><label>Responsable atención <span style="color:#dc2626">*</span></label>
+          <select id="fResp" style="border-color:#2e6da4;border-width:2px">
+            <option value="">— seleccione —</option>
+            <option>DUPLICADO</option>
+            <option>Harumy Pereyra</option>
+            <option>Karla Gambini</option>
+            <option>Luis Miranda</option>
+            <option>Stephania Lucho</option>
+          </select>
+        </div>
         <div class="field"><label>Intentos de llamada</label><input type="number" id="fIntentos" min="1" placeholder="Ej. 2" /></div>
         <div class="field"><label>Contestó</label>
           <select id="fContesto">
@@ -523,6 +545,14 @@ async function guardar() {
   btn.disabled = false;
 }
 
+function cerrarSesion() {
+  sessionStorage.removeItem('qs_auth');
+  document.getElementById('loginOverlay').style.display = 'flex';
+  document.getElementById('passInput').value = '';
+  document.getElementById('passError').style.display = 'none';
+  limpiar();
+}
+
 function limpiar() {
   casoActual = null;
   document.getElementById('inputId').value = '';
@@ -541,31 +571,28 @@ function limpiar() {
   ['fFechaBaja','fFechaGest'].forEach(id => document.getElementById(id).value = '');
 }
 
-// Netlify Identity
-window.addEventListener('load', function() {
-  if (typeof netlifyIdentity === 'undefined') return;
-
-  netlifyIdentity.on('init', function(user) {
-    if (!user) {
-      document.getElementById('loginOverlay').style.display = 'flex';
-    } else {
-      document.getElementById('loginOverlay').style.display = 'none';
-    }
-  });
-
-  netlifyIdentity.on('login', function(user) {
+function verificarPass() {
+  var input = document.getElementById('passInput').value;
+  if (input === 'OS1PT3L') {
     document.getElementById('loginOverlay').style.display = 'none';
-    netlifyIdentity.close();
-  });
+    sessionStorage.setItem('qs_auth', '1');
+  } else {
+    document.getElementById('passError').style.display = 'block';
+    document.getElementById('passInput').value = '';
+    document.getElementById('passInput').focus();
+  }
+}
 
-  netlifyIdentity.on('logout', function() {
+// Check session on load
+window.addEventListener('load', function() {
+  if (sessionStorage.getItem('qs_auth') !== '1') {
     document.getElementById('loginOverlay').style.display = 'flex';
-    limpiar();
-  });
-
-  netlifyIdentity.init({
-    container: '#loginOverlay'
-  });
+    setTimeout(function() {
+      document.getElementById('passInput').focus();
+    }, 100);
+  } else {
+    document.getElementById('loginOverlay').style.display = 'none';
+  }
 });
 </script>
 </body>
