@@ -62,6 +62,21 @@ body{font-family:Arial,sans-serif;background:#f4f6f9;color:#222;min-height:100vh
 .toast-title{font-size:14px;font-weight:600;color:#166534;margin-bottom:2px}
 .toast-sub{font-size:12px;color:#166534;opacity:0.8}
 
+/* Mode badge */
+.mode-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:99px;font-size:12px;font-weight:600;margin-bottom:1rem}
+.mode-nuevo{background:#dcfce7;color:#166534;border:1px solid #bbf7d0}
+.mode-edicion{background:#fff3cd;color:#92400e;border:1px solid #fcd34d}
+.dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.dot-nuevo{background:#16a34a}
+.dot-edicion{background:#d97706}
+
+/* ID not found */
+.not-found{background:#fee2e2;border:1px solid #fca5a5;border-radius:10px;padding:1rem 1.25rem;margin-bottom:1rem;display:none}
+.not-found.show{display:flex;align-items:center;gap:12px}
+.not-found-icon{font-size:22px;flex-shrink:0}
+.not-found-title{font-size:14px;font-weight:600;color:#991b1b}
+.not-found-sub{font-size:12px;color:#991b1b;opacity:0.8;margin-top:2px}
+
 /* Status inline */
 .status{padding:10px 14px;border-radius:8px;font-size:13px;margin-top:1rem;display:none}
 .s-ok{background:#dcfce7;color:#166534;display:block}
@@ -78,8 +93,25 @@ body{font-family:Arial,sans-serif;background:#f4f6f9;color:#222;min-height:100vh
   </div>
 
   <div class="search-bar">
-    <input type="text" id="inputId" placeholder="Ingrese ID del caso..." onkeydown="if(event.key==='Enter')buscar()" />
+    <input type="text" id="inputId" placeholder="Ingrese ID del caso..." onkeydown="if(event.key==='Enter')buscar()" oninput="document.getElementById('notFound').classList.remove('show')" />
     <button id="btnBuscar" onclick="buscar()">&#128269; Buscar</button>
+  </div>
+
+  <!-- ID no encontrado -->
+  <div class="not-found" id="notFound">
+    <div class="not-found-icon">&#10006;</div>
+    <div>
+      <div class="not-found-title">ID no encontrado</div>
+      <div class="not-found-sub" id="notFoundSub"></div>
+    </div>
+  </div>
+
+  <!-- Badge de modo -->
+  <div id="modeBadge" style="display:none">
+    <span class="mode-badge" id="modeBadgeInner">
+      <span class="dot" id="modeDot"></span>
+      <span id="modeText"></span>
+    </span>
   </div>
 
   <div id="formArea" class="hidden">
@@ -289,7 +321,20 @@ async function buscar() {
   try {
     const res = await fetch(API + '?action=buscar&id=' + encodeURIComponent(id));
     const json = await res.json();
-    if (!json.ok) { setStatus('ID ' + id + ' no encontrado en la base.', 'err'); btn.disabled = false; return; }
+    if (!json.ok) {
+      document.getElementById('notFound').classList.add('show');
+      document.getElementById('notFoundSub').textContent = 'El ID ' + id + ' no existe en la base de datos. Verifique el número e intente nuevamente.';
+      document.getElementById('modeBadge').style.display = 'none';
+      document.getElementById('formArea').classList.add('hidden');
+      document.getElementById('stickyBar').style.display = 'none';
+  document.getElementById('modeBadge').style.display = 'none';
+  document.getElementById('notFound').classList.remove('show');
+      setStatus('', 'err');
+      document.getElementById('status').style.display = 'none';
+      btn.disabled = false;
+      return;
+    }
+    document.getElementById('notFound').classList.remove('show');
     const d = json.data;
     casoActual = d;
     // Si es caso nuevo (sin responsable), limpiar campos previos
@@ -346,6 +391,21 @@ async function buscar() {
     setVal('fCorrob',    d['CORROBORACIÓN']);
     setVal('fObs',       d['OBSERVACIONES']);
 
+    // Mode badge
+    var esNuevo = !d['RESPONSABLE ATENCIÓN'] || d['RESPONSABLE ATENCIÓN'].toString().trim() === '';
+    var badge = document.getElementById('modeBadgeInner');
+    var dot = document.getElementById('modeDot');
+    var modeText = document.getElementById('modeText');
+    if (esNuevo) {
+      badge.className = 'mode-badge mode-nuevo';
+      dot.className = 'dot dot-nuevo';
+      modeText.textContent = 'Caso nuevo — listo para registrar';
+    } else {
+      badge.className = 'mode-badge mode-edicion';
+      dot.className = 'dot dot-edicion';
+      modeText.textContent = 'Editando caso existente';
+    }
+    document.getElementById('modeBadge').style.display = 'block';
     document.getElementById('formArea').classList.remove('hidden');
     document.getElementById('stickyBar').style.display = 'flex';
     document.getElementById('caseLabel').textContent = 'ID ' + id + ' — ' + (document.getElementById('dNombre').textContent);
@@ -434,6 +494,8 @@ function limpiar() {
   document.getElementById('inputId').value = '';
   document.getElementById('formArea').classList.add('hidden');
   document.getElementById('stickyBar').style.display = 'none';
+  document.getElementById('modeBadge').style.display = 'none';
+  document.getElementById('notFound').classList.remove('show');
   document.getElementById('status').className = 'status';
   document.getElementById('status').textContent = '';
   ['fResp','fIntentos','fNServ','fEmp2','fCodBaja','fAsesor','fCheca','fCorrob','fObs','fDir'].forEach(id => {
