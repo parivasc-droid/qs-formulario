@@ -22,7 +22,7 @@ body{font-family:Arial,sans-serif;background:#f4f6f9;color:#222;min-height:100vh
 .titular-title{font-size:11px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:12px}
 .tgroup{display:grid;gap:8px 16px;padding-bottom:12px;margin-bottom:12px;border-bottom:1px solid #eee}
 .tgroup:last-child{border-bottom:none;padding-bottom:0;margin-bottom:0}
-.tgroup-2{grid-template-columns:1fr 1fr}
+.tgroup-1{grid-template-columns:1fr}.tgroup-2{grid-template-columns:1fr 1fr}
 .tgroup-3{grid-template-columns:1fr 1fr 1fr}
 .tfield label{font-size:11px;color:#888;display:block;margin-bottom:1px}
 .tfield span{font-size:13px;color:#1a3a5c;font-weight:600}
@@ -86,31 +86,31 @@ body{font-family:Arial,sans-serif;background:#f4f6f9;color:#222;min-height:100vh
     <div class="titular">
       <p class="titular-title">Datos del titular</p>
 
-      <div class="tgroup tgroup-3">
+      <div class="tgroup tgroup-1">
         <div class="tfield"><label>Fecha de registro</label><span id="dFecha">—</span></div>
-        <div class="tfield"><label>Nombre completo</label><span id="dNombre">—</span></div>
-        <div class="tfield"><label>Documento</label><span id="dDoc">—</span></div>
       </div>
 
-      <div class="tgroup tgroup-3">
+      <div class="tgroup tgroup-3" style="grid-template-columns:2fr 1fr 1fr">
+        <div class="tfield"><label>Nombre completo</label><span id="dNombre">—</span></div>
+        <div class="tfield"><label>Documento</label><span id="dDoc">—</span></div>
         <div class="tfield"><label>Lugar</label><span id="dLugar">—</span></div>
+      </div>
+
+      <div class="tgroup tgroup-2">
         <div class="tfield"><label>Email</label><span id="dEmail">—</span></div>
         <div class="tfield"><label>Celular</label><span id="dCelular">—</span></div>
       </div>
 
-      <div class="tgroup tgroup-3">
+      <div class="tgroup tgroup-3" style="grid-template-columns:1fr 1fr 1fr 1fr">
         <div class="tfield"><label>Tipo de problema</label><span id="dTipoProb">—</span></div>
         <div class="tfield"><label>N° Servicio</label><span id="dNServ2">—</span></div>
         <div class="tfield"><label>Servicio de baja</label><span id="dServicio">—</span></div>
+        <div class="tfield"><label>Empresa operadora</label><span id="dEmpresa">—</span></div>
       </div>
 
       <div class="tgroup tgroup-3">
-        <div class="tfield"><label>Empresa operadora</label><span id="dEmpresa">—</span></div>
         <div class="tfield"><label>Fecha solicitud baja</label><span id="dFechaBaja2">—</span></div>
         <div class="tfield"><label>Canal de atención</label><span id="dCanal">—</span></div>
-      </div>
-
-      <div class="tgroup tgroup-2">
         <div class="tfield"><label>Código baja / constancia</label><span id="dCodBaja2">—</span></div>
       </div>
     </div>
