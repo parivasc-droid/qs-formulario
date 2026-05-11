@@ -6,6 +6,14 @@
 <title>Quiero Salirme — OSIPTEL</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
+.login-overlay{position:fixed;inset:0;background:#f4f6f9;display:flex;align-items:center;justify-content:center;z-index:999}
+.login-box{background:#fff;border:1px solid #dde3ec;border-radius:12px;padding:2rem;width:100%;max-width:380px;text-align:center}
+.login-logo{background:#1a3a5c;border-radius:10px;padding:1rem 1.5rem;margin-bottom:1.5rem}
+.login-logo h1{font-size:16px;font-weight:600;color:#fff}
+.login-logo p{font-size:11px;color:#9bb8d4;margin-top:2px}
+.login-btn{width:100%;padding:11px;background:#1a3a5c;color:#fff;border:none;border-radius:8px;font-size:14px;cursor:pointer;margin-top:1rem}
+.login-btn:hover{background:#2e6da4}
+.login-user{font-size:12px;color:#888;margin-top:8px}
 body{font-family:Arial,sans-serif;background:#f4f6f9;color:#222;min-height:100vh;padding:1.5rem 1.5rem 100px}
 .app{max-width:760px;margin:0 auto}
 .header{background:#1a3a5c;border-radius:10px;padding:1.25rem 1.5rem;margin-bottom:1.5rem}
@@ -96,8 +104,22 @@ body{font-family:Arial,sans-serif;background:#f4f6f9;color:#222;min-height:100vh
   body{padding:1rem 1rem 100px}
 }
 </style>
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 </head>
 <body>
+<!-- Login overlay -->
+<div class="login-overlay" id="loginOverlay">
+  <div class="login-box">
+    <div class="login-logo">
+      <h1>Quiero Salirme — OSIPTEL</h1>
+      <p>Registro de atenciones del programa</p>
+    </div>
+    <p style="font-size:13px;color:#555;margin-bottom:1.5rem">Inicia sesión con tu correo institucional para continuar</p>
+    <button class="login-btn" id="loginBtn" onclick="netlifyIdentity.open()">Iniciar sesión</button>
+    <p class="login-user" id="loginUser"></p>
+  </div>
+</div>
+
 <div class="app">
   <div class="header">
     <h1>Quiero Salirme — OSIPTEL</h1>
@@ -518,6 +540,26 @@ function limpiar() {
   });
   ['fFechaBaja','fFechaGest'].forEach(id => document.getElementById(id).value = '');
 }
+
+// Netlify Identity
+netlifyIdentity.on('init', user => {
+  if (!user) {
+    document.getElementById('loginOverlay').style.display = 'flex';
+  } else {
+    document.getElementById('loginOverlay').style.display = 'none';
+    document.getElementById('loginUser').textContent = user.email;
+  }
+});
+
+netlifyIdentity.on('login', user => {
+  document.getElementById('loginOverlay').style.display = 'none';
+  netlifyIdentity.close();
+});
+
+netlifyIdentity.on('logout', () => {
+  document.getElementById('loginOverlay').style.display = 'flex';
+  limpiar();
+});
 </script>
 </body>
 </html>

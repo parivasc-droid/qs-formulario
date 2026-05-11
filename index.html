@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="refresh" content="0; url=/QS_App.html">
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+<script>
+  if (window.netlifyIdentity) {
+    window.netlifyIdentity.on("init", user => {
+      if (!user) {
+        window.netlifyIdentity.on("login", () => {
+          document.location.href = "/QS_App.html";
+        });
+      }
+    });
+  }
+</script>
+<title>Redirigiendo...</title>
+</head>
+<body>
+<p>Redirigiendo...</p>
+</body>
+</html>
