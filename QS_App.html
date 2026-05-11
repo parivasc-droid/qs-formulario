@@ -6,21 +6,28 @@
 <title>Quiero Salirme — OSIPTEL</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Arial,sans-serif;background:#f4f6f9;color:#222;min-height:100vh;padding:1.5rem}
+body{font-family:Arial,sans-serif;background:#f4f6f9;color:#222;min-height:100vh;padding:1.5rem 1.5rem 100px}
 .app{max-width:760px;margin:0 auto}
-.header{background:#1a3a5c;border-radius:10px;padding:1.25rem 1.5rem;margin-bottom:1.5rem;display:flex;align-items:center;gap:12px}
+.header{background:#1a3a5c;border-radius:10px;padding:1.25rem 1.5rem;margin-bottom:1.5rem}
 .header h1{font-size:17px;font-weight:600;color:#fff}
 .header p{font-size:12px;color:#9bb8d4;margin-top:2px}
 .search-bar{display:flex;gap:8px;margin-bottom:1.5rem}
 .search-bar input{flex:1;padding:10px 14px;border:1px solid #ccc;border-radius:8px;font-size:14px}
-.search-bar button{padding:10px 22px;background:#1a3a5c;color:#fff;border:none;border-radius:8px;font-size:14px;cursor:pointer;display:flex;align-items:center;gap:6px}
+.search-bar button{padding:10px 22px;background:#1a3a5c;color:#fff;border:none;border-radius:8px;font-size:14px;cursor:pointer}
 .search-bar button:hover{background:#2e6da4}
 .search-bar button:disabled{opacity:0.5;cursor:not-allowed}
-.titular{background:#eef2f7;border-radius:10px;border:1px solid #d0daea;padding:1rem 1.25rem;margin-bottom:1.25rem}
-.titular h2{font-size:11px;font-weight:600;color:#666;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:10px}
-.tgrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+
+/* Titular */
+.titular{background:#fff;border:1px solid #dde3ec;border-radius:10px;padding:1rem 1.25rem;margin-bottom:1.25rem}
+.titular-title{font-size:11px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:12px}
+.tgroup{display:grid;gap:8px 16px;padding-bottom:12px;margin-bottom:12px;border-bottom:1px solid #eee}
+.tgroup:last-child{border-bottom:none;padding-bottom:0;margin-bottom:0}
+.tgroup-2{grid-template-columns:1fr 1fr}
+.tgroup-3{grid-template-columns:1fr 1fr 1fr}
 .tfield label{font-size:11px;color:#888;display:block;margin-bottom:1px}
 .tfield span{font-size:13px;color:#1a3a5c;font-weight:600}
+
+/* Sections */
 .section{background:#fff;border:1px solid #dde3ec;border-radius:10px;padding:1rem 1.25rem;margin-bottom:1rem}
 .sec-head{display:flex;align-items:center;gap:8px;margin-bottom:1rem;padding-bottom:8px;border-bottom:1px solid #eee}
 .sec-head h3{font-size:13px;font-weight:600;color:#1a3a5c}
@@ -37,12 +44,25 @@ body{font-family:Arial,sans-serif;background:#f4f6f9;color:#222;min-height:100vh
 .field input:disabled,.field select:disabled{opacity:0.4;background:#f0f0f0;cursor:not-allowed}
 .blocked{opacity:0.4;pointer-events:none}
 .blocked-note{font-size:11px;color:#888;font-style:italic;margin-bottom:8px}
-.actions{display:flex;gap:8px;justify-content:flex-end;margin-top:1rem}
-.btn-save{padding:10px 24px;background:#1a3a5c;color:#fff;border:none;border-radius:8px;font-size:14px;cursor:pointer}
+
+/* Sticky bar */
+.sticky-bar{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #dde3ec;padding:12px 24px;display:flex;align-items:center;justify-content:space-between;gap:12px;z-index:100;box-shadow:0 -2px 8px rgba(0,0,0,0.06)}
+.sticky-bar .case-label{font-size:12px;color:#888;font-style:italic;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:300px}
+.sticky-bar .btns{display:flex;gap:8px;flex-shrink:0}
+.btn-save{padding:9px 22px;background:#1a3a5c;color:#fff;border:none;border-radius:8px;font-size:14px;cursor:pointer}
 .btn-save:hover{background:#2e6da4}
 .btn-save:disabled{opacity:0.5;cursor:not-allowed}
-.btn-clear{padding:10px 20px;background:#f0f0f0;color:#555;border:1px solid #ccc;border-radius:8px;font-size:14px;cursor:pointer}
+.btn-clear{padding:9px 18px;background:#f0f0f0;color:#555;border:1px solid #ccc;border-radius:8px;font-size:14px;cursor:pointer}
 .btn-clear:hover{background:#e0e0e0}
+
+/* Confirmation toast */
+.toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#fff;border:1px solid #bbf7d0;border-radius:10px;padding:14px 20px;display:flex;align-items:center;gap:12px;box-shadow:0 4px 16px rgba(0,0,0,0.1);z-index:200;min-width:300px;display:none}
+.toast.show{display:flex}
+.toast-icon{font-size:22px;color:#16a34a;flex-shrink:0}
+.toast-title{font-size:14px;font-weight:600;color:#166534;margin-bottom:2px}
+.toast-sub{font-size:12px;color:#166534;opacity:0.8}
+
+/* Status inline */
 .status{padding:10px 14px;border-radius:8px;font-size:13px;margin-top:1rem;display:none}
 .s-ok{background:#dcfce7;color:#166534;display:block}
 .s-err{background:#fee2e2;color:#991b1b;display:block}
@@ -53,10 +73,8 @@ body{font-family:Arial,sans-serif;background:#f4f6f9;color:#222;min-height:100vh
 <body>
 <div class="app">
   <div class="header">
-    <div>
-      <h1>Quiero Salirme — OSIPTEL</h1>
-      <p>Registro de atenciones del programa</p>
-    </div>
+    <h1>Quiero Salirme — OSIPTEL</h1>
+    <p>Registro de atenciones del programa</p>
   </div>
 
   <div class="search-bar">
@@ -66,19 +84,34 @@ body{font-family:Arial,sans-serif;background:#f4f6f9;color:#222;min-height:100vh
 
   <div id="formArea" class="hidden">
     <div class="titular">
-      <h2>Datos del titular</h2>
-      <div class="tgrid">
+      <p class="titular-title">Datos del titular</p>
+
+      <div class="tgroup tgroup-3">
+        <div class="tfield"><label>Fecha de registro</label><span id="dFecha">—</span></div>
         <div class="tfield"><label>Nombre completo</label><span id="dNombre">—</span></div>
         <div class="tfield"><label>Documento</label><span id="dDoc">—</span></div>
-        <div class="tfield"><label>Empresa operadora</label><span id="dEmpresa">—</span></div>
-        <div class="tfield"><label>Servicio de baja</label><span id="dServicio">—</span></div>
+      </div>
+
+      <div class="tgroup tgroup-3">
+        <div class="tfield"><label>Lugar</label><span id="dLugar">—</span></div>
         <div class="tfield"><label>Email</label><span id="dEmail">—</span></div>
         <div class="tfield"><label>Celular</label><span id="dCelular">—</span></div>
-        <div class="tfield"><label>Canal de atención</label><span id="dCanal">—</span></div>
-        <div class="tfield"><label>Fecha de registro</label><span id="dFecha">—</span></div>
-        <div class="tfield"><label>Lugar</label><span id="dLugar">—</span></div>
+      </div>
+
+      <div class="tgroup tgroup-3">
+        <div class="tfield"><label>Tipo de problema</label><span id="dTipoProb">—</span></div>
         <div class="tfield"><label>N° Servicio</label><span id="dNServ2">—</span></div>
+        <div class="tfield"><label>Servicio de baja</label><span id="dServicio">—</span></div>
+      </div>
+
+      <div class="tgroup tgroup-3">
+        <div class="tfield"><label>Empresa operadora</label><span id="dEmpresa">—</span></div>
         <div class="tfield"><label>Fecha solicitud baja</label><span id="dFechaBaja2">—</span></div>
+        <div class="tfield"><label>Canal de atención</label><span id="dCanal">—</span></div>
+      </div>
+
+      <div class="tgroup tgroup-2">
+        <div class="tfield"><label>Código baja / constancia</label><span id="dCodBaja2">—</span></div>
       </div>
     </div>
 
@@ -200,18 +233,39 @@ body{font-family:Arial,sans-serif;background:#f4f6f9;color:#222;min-height:100vh
         <div class="field full"><label>Observaciones / seguimiento</label><textarea id="fObs"></textarea></div>
       </div>
     </div>
-
-    <div class="actions">
-      <button class="btn-clear" onclick="limpiar()">Limpiar</button>
-      <button class="btn-save" id="btnGuardar" onclick="guardar()">&#128190; Guardar</button>
-    </div>
   </div>
+
   <div id="status" class="status"></div>
+</div>
+
+<!-- Sticky bar -->
+<div class="sticky-bar" id="stickyBar" style="display:none">
+  <span class="case-label" id="caseLabel"></span>
+  <div class="btns">
+    <button class="btn-clear" onclick="limpiar()">Limpiar</button>
+    <button class="btn-save" id="btnGuardar" onclick="guardar()">&#128190; Guardar</button>
+  </div>
+</div>
+
+<!-- Toast confirmación -->
+<div class="toast" id="toast">
+  <div class="toast-icon">&#10003;</div>
+  <div>
+    <div class="toast-title">Guardado correctamente</div>
+    <div class="toast-sub" id="toastSub"></div>
+  </div>
 </div>
 
 <script>
 const API = 'https://script.google.com/macros/s/AKfycbwF1JXEjBVw6vtUms3ucTa_LxOsAtP1VJq7jIjIwneJBB6u_ffTn0dfFgbtVpWsvv6p/exec';
 let casoActual = null;
+
+function fmtFecha(val) {
+  if (!val) return '—';
+  const d = new Date(val);
+  if (isNaN(d)) return val;
+  return d.toLocaleDateString('es-PE', {day:'2-digit', month:'2-digit', year:'numeric'});
+}
 
 function setStatus(msg, tipo) {
   const el = document.getElementById('status');
@@ -219,11 +273,11 @@ function setStatus(msg, tipo) {
   el.textContent = msg;
 }
 
-function fmtFecha(val) {
-  if (!val) return '—';
-  const d = new Date(val);
-  if (isNaN(d)) return val;
-  return d.toLocaleDateString('es-PE', {day:'2-digit', month:'2-digit', year:'numeric'});
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  document.getElementById('toastSub').textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 4000);
 }
 
 async function buscar() {
@@ -241,19 +295,21 @@ async function buscar() {
     const empresa = (d['EMPRESAOPERADORA'] || '').toUpperCase().includes('OTRO')
       ? (d['OTRAEMPRESAOPERADORA'] || d['EMPRESAOPERADORA'])
       : d['EMPRESAOPERADORA'];
-    document.getElementById('dNombre').textContent =
-      [d['NOMBRETITULAR'], d['APELLIDOPATERNO'], d['APELLIDOMATERNO']].filter(Boolean).join(' ') || '—';
-    document.getElementById('dDoc').textContent =
-      [d['TIPODOCUMENTO'], d['NUMERODOCUMENTO']].filter(Boolean).join(' ') || '—';
-    document.getElementById('dEmpresa').textContent = empresa || '—';
-    document.getElementById('dServicio').textContent = d['SERVICIOBAJA'] || '—';
-    document.getElementById('dCanal').textContent = d['CANALATENCIONTRAMITE'] || '—';
-    document.getElementById('dFecha').textContent = fmtFecha(d['FECHAHORAREGISTRO']);
-    document.getElementById('dEmail').textContent = d['EMAIL'] || '—';
-    document.getElementById('dCelular').textContent = d['CELULAR'] || '—';
-    document.getElementById('dLugar').textContent = d['LUGAR'] || '—';
-    document.getElementById('dNServ2').textContent = d['N° SERVICIO'] || '—';
-    document.getElementById('dFechaBaja2').textContent = fmtFecha(d['FECHA SOLICITUD DE BAJA']);
+
+    document.getElementById('dFecha').textContent     = fmtFecha(d['FECHAHORAREGISTRO']);
+    document.getElementById('dNombre').textContent    = [d['NOMBRETITULAR'], d['APELLIDOPATERNO'], d['APELLIDOMATERNO']].filter(Boolean).join(' ') || '—';
+    document.getElementById('dDoc').textContent       = [d['TIPODOCUMENTO'], d['NUMERODOCUMENTO']].filter(Boolean).join(' ') || '—';
+    document.getElementById('dLugar').textContent     = d['LUGAR'] || '—';
+    document.getElementById('dEmail').textContent     = d['EMAIL'] || '—';
+    document.getElementById('dCelular').textContent   = d['CELULAR'] || '—';
+    document.getElementById('dTipoProb').textContent  = d['TIPOPROBLEMA'] || '—';
+    document.getElementById('dNServ2').textContent    = d['N° SERVICIO'] || '—';
+    document.getElementById('dServicio').textContent  = d['SERVICIOBAJA'] || '—';
+    document.getElementById('dEmpresa').textContent   = empresa || '—';
+    document.getElementById('dFechaBaja2').textContent= fmtFecha(d['FECHA SOLICITUD DE BAJA']);
+    document.getElementById('dCanal').textContent     = d['CANALATENCIONTRAMITE'] || '—';
+    document.getElementById('dCodBaja2').textContent  = d['CODIGO BAJA- CONSTANCIA'] || '—';
+
     setVal('fResp',      d['RESPONSABLE ATENCIÓN']);
     setVal('fIntentos',  d['INTENTO DE LLAMADA']);
     setVal('fContesto',  d['CONTESTÓ']);
@@ -275,7 +331,10 @@ async function buscar() {
     setVal('fComunica',  d['HUBO COMUNICACIÓN CON USUARIO']);
     setVal('fCorrob',    d['CORROBORACIÓN']);
     setVal('fObs',       d['OBSERVACIONES']);
+
     document.getElementById('formArea').classList.remove('hidden');
+    document.getElementById('stickyBar').style.display = 'flex';
+    document.getElementById('caseLabel').textContent = 'ID ' + id + ' — ' + (document.getElementById('dNombre').textContent);
     aplicarLogica();
     setStatus('Caso ID ' + id + ' cargado correctamente.', 'ok');
   } catch(e) {
@@ -314,27 +373,27 @@ async function guardar() {
   btn.disabled = true;
   setStatus('Guardando...', 'load');
   const campos = {
-    'RESPONSABLE ATENCIÓN':                                    document.getElementById('fResp').value,
-    'INTENTO DE LLAMADA':                                      document.getElementById('fIntentos').value,
-    'CONTESTÓ':                                                document.getElementById('fContesto').value,
-    'ACCIÓN REALIZADA':                                        accion,
-    'N° REGISTRO\n ATUS':                                      document.getElementById('fAtus').value,
-    'TIPO DE PROBLEMA':                                        document.getElementById('fTipo').value,
-    '1. Número de servicio afectado':                          document.getElementById('fNServ').value,
-    '2. Empresa operadora':                                    document.getElementById('fEmp2').value,
-    '3. Servicios contratados':                                document.getElementById('fServicios').value,
-    '4. Dirección que figura en recibo o de instalación.':     document.getElementById('fDir').value,
-    '5. Fecha de la baja / Fecha en la que solicito la baja':  document.getElementById('fFechaBaja').value,
-    '6. Canal mediante el cual solicitó o intentó la baja':    document.getElementById('fCanalBaja').value,
-    '7. Código de baja o constancia (de contar con ella).':    document.getElementById('fCodBaja').value,
-    'Opcional: nombre de asesor':                              document.getElementById('fAsesor').value,
-    'CÓDIGO DE CHECA TU CASO':                                 document.getElementById('fCheca').value,
-    'FECHA DE INICIO DE GESTION':                              document.getElementById('fFechaGest').value,
-    'ESTADO DE GESTIÓN/CHECA TU CASO':                         document.getElementById('fEstado').value,
-    'VALIDACIÓN EN SICBAM - CHECA TUS LINEAS':                 document.getElementById('fSicbam').value,
-    'HUBO COMUNICACIÓN CON USUARIO':                           document.getElementById('fComunica').value,
-    'CORROBORACIÓN':                                           document.getElementById('fCorrob').value,
-    'OBSERVACIONES':                                           document.getElementById('fObs').value,
+    'RESPONSABLE ATENCIÓN':                                   document.getElementById('fResp').value,
+    'INTENTO DE LLAMADA':                                     document.getElementById('fIntentos').value,
+    'CONTESTÓ':                                               document.getElementById('fContesto').value,
+    'ACCIÓN REALIZADA':                                       accion,
+    'N° REGISTRO\n ATUS':                                     document.getElementById('fAtus').value,
+    'TIPO DE PROBLEMA':                                       document.getElementById('fTipo').value,
+    '1. Número de servicio afectado':                         document.getElementById('fNServ').value,
+    '2. Empresa operadora':                                   document.getElementById('fEmp2').value,
+    '3. Servicios contratados':                               document.getElementById('fServicios').value,
+    '4. Dirección que figura en recibo o de instalación.':    document.getElementById('fDir').value,
+    '5. Fecha de la baja / Fecha en la que solicito la baja': document.getElementById('fFechaBaja').value,
+    '6. Canal mediante el cual solicitó o intentó la baja':   document.getElementById('fCanalBaja').value,
+    '7. Código de baja o constancia (de contar con ella).':   document.getElementById('fCodBaja').value,
+    'Opcional: nombre de asesor':                             document.getElementById('fAsesor').value,
+    'CÓDIGO DE CHECA TU CASO':                                document.getElementById('fCheca').value,
+    'FECHA DE INICIO DE GESTION':                             document.getElementById('fFechaGest').value,
+    'ESTADO DE GESTIÓN/CHECA TU CASO':                        document.getElementById('fEstado').value,
+    'VALIDACIÓN EN SICBAM - CHECA TUS LINEAS':                document.getElementById('fSicbam').value,
+    'HUBO COMUNICACIÓN CON USUARIO':                          document.getElementById('fComunica').value,
+    'CORROBORACIÓN':                                          document.getElementById('fCorrob').value,
+    'OBSERVACIONES':                                          document.getElementById('fObs').value,
   };
   try {
     const res = await fetch(API, {
@@ -343,7 +402,10 @@ async function guardar() {
     });
     const json = await res.json();
     if (json.ok) {
-      setStatus('Guardado correctamente. [' + new Date().toLocaleString('es-PE') + ']', 'ok');
+      const ts = new Date().toLocaleString('es-PE');
+      setStatus('', 'ok');
+      document.getElementById('status').style.display = 'none';
+      showToast('ID ' + casoActual['ID'] + ' — ' + ts);
     } else {
       setStatus('Error al guardar: ' + (json.msg || 'intente de nuevo.'), 'err');
     }
@@ -357,6 +419,7 @@ function limpiar() {
   casoActual = null;
   document.getElementById('inputId').value = '';
   document.getElementById('formArea').classList.add('hidden');
+  document.getElementById('stickyBar').style.display = 'none';
   document.getElementById('status').className = 'status';
   document.getElementById('status').textContent = '';
   ['fResp','fIntentos','fNServ','fEmp2','fCodBaja','fAsesor','fCheca','fCorrob','fObs','fDir'].forEach(id => {
