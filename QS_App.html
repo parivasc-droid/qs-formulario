@@ -115,7 +115,7 @@ body{font-family:Arial,sans-serif;background:#f4f6f9;color:#222;min-height:100vh
       <p>Registro de atenciones del programa</p>
     </div>
     <p style="font-size:13px;color:#555;margin-bottom:1.5rem">Inicia sesión con tu correo institucional para continuar</p>
-    <button class="login-btn" id="loginBtn" onclick="netlifyIdentity.open()">Iniciar sesión</button>
+    <button class="login-btn" id="loginBtn" onclick="netlifyIdentity.open('login')">Iniciar sesión</button>
     <p class="login-user" id="loginUser"></p>
   </div>
 </div>
@@ -542,23 +542,30 @@ function limpiar() {
 }
 
 // Netlify Identity
-netlifyIdentity.on('init', user => {
-  if (!user) {
-    document.getElementById('loginOverlay').style.display = 'flex';
-  } else {
+window.addEventListener('load', function() {
+  if (typeof netlifyIdentity === 'undefined') return;
+
+  netlifyIdentity.on('init', function(user) {
+    if (!user) {
+      document.getElementById('loginOverlay').style.display = 'flex';
+    } else {
+      document.getElementById('loginOverlay').style.display = 'none';
+    }
+  });
+
+  netlifyIdentity.on('login', function(user) {
     document.getElementById('loginOverlay').style.display = 'none';
-    document.getElementById('loginUser').textContent = user.email;
-  }
-});
+    netlifyIdentity.close();
+  });
 
-netlifyIdentity.on('login', user => {
-  document.getElementById('loginOverlay').style.display = 'none';
-  netlifyIdentity.close();
-});
+  netlifyIdentity.on('logout', function() {
+    document.getElementById('loginOverlay').style.display = 'flex';
+    limpiar();
+  });
 
-netlifyIdentity.on('logout', () => {
-  document.getElementById('loginOverlay').style.display = 'flex';
-  limpiar();
+  netlifyIdentity.init({
+    container: '#loginOverlay'
+  });
 });
 </script>
 </body>
