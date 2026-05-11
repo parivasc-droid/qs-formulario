@@ -102,10 +102,10 @@ body{font-family:Arial,sans-serif;background:#f4f6f9;color:#222;min-height:100vh
       </div>
 
       <div class="tgroup tgroup-3" style="grid-template-columns:1fr 1fr 1fr 1fr">
-        <div class="tfield"><label>Tipo de problema</label><span id="dTipoProb">—</span></div>
-        <div class="tfield"><label>N° Servicio</label><span id="dNServ2">—</span></div>
-        <div class="tfield"><label>Servicio de baja</label><span id="dServicio">—</span></div>
         <div class="tfield"><label>Empresa operadora</label><span id="dEmpresa">—</span></div>
+        <div class="tfield"><label>Servicio de baja</label><span id="dServicio">—</span></div>
+        <div class="tfield"><label>N° Servicio</label><span id="dNServ2">—</span></div>
+        <div class="tfield"><label>Tipo de problema</label><span id="dTipoProb">—</span></div>
       </div>
 
       <div class="tgroup tgroup-3">
@@ -292,6 +292,19 @@ async function buscar() {
     if (!json.ok) { setStatus('ID ' + id + ' no encontrado en la base.', 'err'); btn.disabled = false; return; }
     const d = json.data;
     casoActual = d;
+    // Si es caso nuevo (sin responsable), limpiar campos previos
+    var esNuevo = !d['RESPONSABLE ATENCIÓN'] || d['RESPONSABLE ATENCIÓN'].toString().trim() === '';
+    if (esNuevo) {
+      ['fResp','fIntentos','fNServ','fEmp2','fCodBaja','fAsesor','fCheca','fCorrob','fObs','fDir','fAtus'].forEach(function(id){
+        var el = document.getElementById(id); if(el) el.value = '';
+      });
+      ['fContesto','fAccion','fTipo','fServicios','fCanalBaja','fEstado','fSicbam','fComunica'].forEach(function(id){
+        var el = document.getElementById(id); if(el) el.selectedIndex = 0;
+      });
+      ['fFechaBaja','fFechaGest'].forEach(function(id){
+        var el = document.getElementById(id); if(el) el.value = '';
+      });
+    }
     const empresa = (d['EMPRESAOPERADORA'] || '').toUpperCase().includes('OTRO')
       ? (d['OTRAEMPRESAOPERADORA'] || d['EMPRESAOPERADORA'])
       : d['EMPRESAOPERADORA'];
@@ -302,7 +315,8 @@ async function buscar() {
     document.getElementById('dLugar').textContent     = d['LUGAR'] || '—';
     document.getElementById('dEmail').textContent     = d['EMAIL'] || '—';
     document.getElementById('dCelular').textContent   = d['CELULAR'] || '—';
-    document.getElementById('dTipoProb').textContent  = d['TIPOPROBLEMA'] || '—';
+    const tipoProb = d['TIPOPROBLEMA'] || '';
+    document.getElementById('dTipoProb').textContent = tipoProb.includes('(') ? tipoProb.split('(')[0].trim() : (tipoProb || '—');
     document.getElementById('dNServ2').textContent    = d['N° SERVICIO'] || '—';
     document.getElementById('dServicio').textContent  = d['SERVICIOBAJA'] || '—';
     document.getElementById('dEmpresa').textContent   = empresa || '—';
