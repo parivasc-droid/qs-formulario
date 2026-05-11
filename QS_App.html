@@ -16,6 +16,8 @@ body{font-family:Arial,sans-serif;background:#f4f6f9;color:#222;min-height:100vh
 .search-bar button{padding:10px 22px;background:#1a3a5c;color:#fff;border:none;border-radius:8px;font-size:14px;cursor:pointer}
 .search-bar button:hover{background:#2e6da4}
 .search-bar button:disabled{opacity:0.5;cursor:not-allowed}
+@keyframes spin{to{transform:rotate(360deg)}}
+.spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,0.4);border-top-color:#fff;border-radius:50%;animation:spin 0.7s linear infinite;vertical-align:middle;margin-right:6px}
 
 /* Titular */
 .titular{background:#fff;border:1px solid #dde3ec;border-radius:10px;padding:1rem 1.25rem;margin-bottom:1.25rem}
@@ -83,6 +85,16 @@ body{font-family:Arial,sans-serif;background:#f4f6f9;color:#222;min-height:100vh
 .s-err{background:#fee2e2;color:#991b1b;display:block}
 .s-load{background:#dbeafe;color:#1e40af;display:block}
 .hidden{display:none}
+@media(max-width:600px){
+  .tgroup-3{grid-template-columns:1fr 1fr}
+  .tgroup-3[style*="grid-template-columns:1fr 1fr 1fr 1fr"]{grid-template-columns:1fr 1fr !important}
+  .tgroup-3[style*="grid-template-columns:2fr 1fr 1fr"]{grid-template-columns:1fr !important}
+  .tgroup-2{grid-template-columns:1fr}
+  .fgrid{grid-template-columns:1fr}
+  .full{grid-column:1}
+  .sticky-bar .case-label{display:none}
+  body{padding:1rem 1rem 100px}
+}
 </style>
 </head>
 <body>
@@ -147,13 +159,13 @@ body{font-family:Arial,sans-serif;background:#f4f6f9;color:#222;min-height:100vh
       </div>
     </div>
 
-    <div class="section">
+    <div class="section" style="border-top:3px solid #3b82f6">
       <div class="sec-head">
-        <h3>Acción realizada</h3>
+        <h3 style="color:#1e40af">Acción realizada</h3>
         <span class="badge b1">Bloque T – Y</span>
       </div>
       <div class="fgrid">
-        <div class="field"><label>Responsable atención</label><input type="text" id="fResp" placeholder="Nombre del orientador" /></div>
+        <div class="field"><label>Responsable atención <span style="color:#dc2626">*</span></label><input type="text" id="fResp" placeholder="Nombre del orientador" style="border-color:#2e6da4;border-width:2px" /></div>
         <div class="field"><label>Intentos de llamada</label><input type="number" id="fIntentos" min="1" placeholder="Ej. 2" /></div>
         <div class="field"><label>Contestó</label>
           <select id="fContesto">
@@ -184,9 +196,9 @@ body{font-family:Arial,sans-serif;background:#f4f6f9;color:#222;min-height:100vh
       </div>
     </div>
 
-    <div class="section" id="secGestion">
+    <div class="section" id="secGestion" style="border-top:3px solid #22c55e">
       <div class="sec-head">
-        <h3>Gestión</h3>
+        <h3 style="color:#166534">Gestión</h3>
         <span class="badge b2">Bloque Z – AH</span>
       </div>
       <p id="noteG" class="blocked-note hidden">No aplica para esta acción.</p>
@@ -225,9 +237,9 @@ body{font-family:Arial,sans-serif;background:#f4f6f9;color:#222;min-height:100vh
       </div>
     </div>
 
-    <div class="section" id="secSeguimiento">
+    <div class="section" id="secSeguimiento" style="border-top:3px solid #f59e0b">
       <div class="sec-head">
-        <h3>Seguimiento</h3>
+        <h3 style="color:#92400e">Seguimiento</h3>
         <span class="badge b3">Bloque AI – AO</span>
       </div>
       <p id="noteS" class="blocked-note hidden">No aplica para esta acción.</p>
@@ -317,6 +329,7 @@ async function buscar() {
   if (!id) { setStatus('Ingrese un ID antes de buscar.', 'err'); return; }
   const btn = document.getElementById('btnBuscar');
   btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>Buscando...';
   setStatus('Buscando caso ' + id + '...', 'load');
   try {
     const res = await fetch(API + '?action=buscar&id=' + encodeURIComponent(id));
@@ -328,6 +341,7 @@ async function buscar() {
       document.getElementById('formArea').classList.add('hidden');
       document.getElementById('stickyBar').style.display = 'none';
       document.getElementById('status').style.display = 'none';
+      btn.innerHTML = '&#128269; Buscar';
       btn.disabled = false;
       return;
     }
@@ -411,6 +425,7 @@ async function buscar() {
   } catch(e) {
     setStatus('Error de conexión: ' + e.message, 'err');
   }
+  btn.innerHTML = '&#128269; Buscar';
   btn.disabled = false;
 }
 
